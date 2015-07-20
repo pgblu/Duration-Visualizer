@@ -1,29 +1,6 @@
+require_relative 'duration_utilities'
 
-class Numeric
-  def round_to( decimals=0 )
-    factor = 10.0**decimals
-    (self*factor).round / factor
-  end
-end
-
-class Integer
-  def get_exploder_values
-    primevals = Array.new
-    1.upto(self / 2) { |x|
-      if self.relprime(x)
-        primevals.push(x)
-      end
-    }
-    return primevals
-  end
-
-  def relprime(other)
-    t = Rational(self,other)
-    return t.numerator == self
-  end
-end
-
-class Array
+class ExplodableArray < Array
   def rot(n)
     m = n % self.length
     self.last(self.length - m) + self.first(m)
@@ -44,7 +21,6 @@ class Array
     selection.each {|x| exploded_hash.store(x, self.explode(x))}
     return exploded_hash
   end
-
 end
 
 def exploded_array(input_array, index, startval, endval, precision)
@@ -66,24 +42,6 @@ def exploded_array(input_array, index, startval, endval, precision)
   thing.push(runningtot)
 end
 
-my_array = Array.new
-puts "What integer would you like to explode?"
-durelements = gets.chomp!.to_i
-ok_user = false
-1.upto(durelements) { |x| my_array.push(x) }
-
-while ok_user == false
-  my_array.shuffle!.display
-  puts "Is this ok?"
-  if /[yY]/.match(gets.chomp)
-    ok_user == true
-    break
-  end
-end
-
-hashout = my_array.collect_explosions
-hashout.display
-puts "\nReady to reverse and rotate..."
 
 
 
@@ -91,9 +49,9 @@ puts "\nReady to reverse and rotate..."
 puts "Provide the starting value"
 initial = gets.chomp!.to_f
 puts "Provide the ending value"
-final = gets.chomp!.to_f
+final = gets.chomp.to_f
 puts "Provide the precision"
-places = gets.chomp!.to_f
+places = gets.chomp.to_f
 while ok_user == false
 my_array = [1,2,3,4,5,6,8,9,10,11,12,13].shuffle
 my_array.push(7)
